@@ -3,10 +3,17 @@
   "description": "Dialogflow CX boost",
   "version": "1.0",
   "manifest_version": 3,
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "webRequest"],
+  "background": {
+    "service_worker": "js/intercept-request.js"
+  },
   "action": {
-    "default_popup": "index.html",
-    "default_icon": "logo.png"
+    "default_popup": "index.html"
+  },
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
   },
   "content_scripts": [
     {

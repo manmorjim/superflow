@@ -13,3 +13,10 @@ observer.observe(document.body, {
 
 // Stop the observer, when it is not required any more.
 // observer.disconnect();
+const onreadystatechange_ = window.XMLHttpRequest.prototype.onreadystatechange;
+window.XMLHttpRequest.prototype.onreadystatechange = function () {
+  console.log('-------------');
+  console.log(this);
+  console.log('-------------');
+  onreadystatechange_.call(this);
+}

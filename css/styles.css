@@ -1,0 +1,52 @@
+.material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 48
+}
+
+.sfw-alt-matches-container {
+    margin-bottom: 2em;
+    display: block;
+}
+
+.sfw-alt-matches-container > h3.gmat-subhead-2 {
+    text-align: center;
+}
+
+.sfw-alt-match {
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.sfw-alt-match-name {
+    margin-right: 0.5em;
+    width: 50%;
+    text-align: right;
+    font-weight: bolder;
+}
+
+.sfw-alt-match-score {
+    margin-left: 0.5em;
+    width: 50%;
+    text-align: left;
+}
+
+.sfw-alt-match-score.low {
+    color: #d86838;
+}
+
+.sfw-alt-match-score.medium {
+    color: #b3991f;
+}
+
+.sfw-alt-match-score.high {
+    color: #69a425;
+}
+
+

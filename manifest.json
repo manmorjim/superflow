@@ -1,0 +1,22 @@
+{
+  "name": "Superflow",
+  "description": "Dialogflow CX boost",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["activeTab"],
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "logo.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://dialogflow.cloud.google.com/*"],
+      "css": ["css/mat-icon.css", "css/styles.css"],
+      "js": [
+        "js/show-alternative-matches.js",
+        "js/show-entity-details.js",
+        "js/main.js"
+      ]
+    }
+  ]
+}

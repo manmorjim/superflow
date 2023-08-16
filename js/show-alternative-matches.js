@@ -51,55 +51,31 @@ function createAlternativeMatchesHtml(matches, input) {
     const container = document.createElement('div');
     container.id = 'sfw-alt-matches-container-id';
     container.className = 'sfw-alt-matches-container';
-
-    const parameterColors = assignColorsToParameters(matches);
-    const matchesHtml = matches.map(({ DisplayName, Score, Parameters }) => {
+    const matchesHtml = []
+    matches.forEach(({ DisplayName, Score }, idx) => {
         let color = 'high';
         if (Score < 0.5) {
             color = 'low';
         } else if (Score < 0.7) {
             color = 'medium';
         }
-        return `<div class="sfw-alt-match">
+        const differenceWithPrevious = idx !== 0 ? scoreDifferenceHtml(matches[idx-1].Score, Score) : ``
+        matchesHtml.push(`<div class="sfw-alt-match">
             <span class="sfw-alt-match-name">${DisplayName}</span>
-            <span class="sfw-alt-match-score ${color}">${Score}</span>
-            ${createParametersHtml(Parameters, input, parameterColors)}
-        </div>`
-    }).join('');
+            <span class="sfw-alt-match-score ${color}">${Score.toFixed(4)}${differenceWithPrevious}</span>
+        </div>`)
+    })
 
     container.innerHTML = `
       <h3 class="gmat-subhead-2">Alternative matches</h3>
-      ${matchesHtml}
+      ${matchesHtml.join('')}
     `;
 
     return container;
 }
 
-function createParametersHtml(parameters, input, parameterColors) {
-    if (!parameters) {
-        return '';
-    }
-
-    let utteranceWithSpans = input;
-    Object.values(parameters).forEach(({type, original}, i) => {
-        const color = parameterColors[type];
-        utteranceWithSpans = utteranceWithSpans.replace(original,
-             `<span class="sfw-alt-match-param" style="background-color: ${color}" title="${type}">${original}</span>`
-        );
-    });
-
-    return `<div class="sfw-intent-utterance">${utteranceWithSpans}</div>`;
-}
-
-function assignColorsToParameters(matches) {
-    const parameterColors = {};
-    matches.forEach(({ Parameters }) =>
-        Object.values(Parameters).forEach(({ type }, i) => {
-            if (parameterColors[type]) return;
-
-
-            const color = ENTITY_COLORS_PALETTE[i % ENTITY_COLORS_PALETTE.length];
-            parameterColors[type] = color;
-        }));
-    return parameterColors;
+function scoreDifferenceHtml(previousScore, currentScore) {
+    const diff = currentScore-previousScore
+    const diffColor = Math.abs(diff) < 0.1 ? 'low' : Math.abs(diff) < 0.2 ? 'medium' : 'high'
+    return `<span class="sfw-alt-match-score ${diffColor}"> (${(diff).toFixed(4)})</span>`
 }

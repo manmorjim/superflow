@@ -85,14 +85,14 @@ function scoreDifferenceHtml(previousScore, currentScore) {
 
 function createParametersHtml(parameters, input, parameterColors) {
     if (!parameters) {
-        return '';
+        return `<div class="sfw-intent-utterance">${input}</div>`;
     }
 
     let utteranceWithSpans = input;
-    Object.values(parameters).forEach(({type, original}, i) => {
+    Object.entries(parameters).forEach(([type, { original }], i) => {
         const color = parameterColors[type];
         utteranceWithSpans = utteranceWithSpans.replace(original,
-             `<span class="sfw-alt-match-param" style="background-color: ${color}" title="${type}">${original}</span>`
+             `<span class="sfw-alt-match-param" style="background-color: ${color}" title="@${type}">${original}</span>`
         );
     });
 
@@ -101,13 +101,20 @@ function createParametersHtml(parameters, input, parameterColors) {
 
 function assignColorsToParameters(matches) {
     const parameterColors = {};
-    matches.forEach(({ Parameters }) =>
-        Object.values(Parameters).forEach(({ type }, i) => {
+    matches.forEach(({ Parameters }) => {
+        if (!Parameters) return;
+
+        Object.keys(Parameters).forEach((type, i) => {
             if (parameterColors[type]) return;
 
-
-            const color = ENTITY_COLORS_PALETTE[i % ENTITY_COLORS_PALETTE.length];
+            // get the first color not used by any parameter
+            let color = ENTITY_COLORS_PALETTE.find(c =>
+                Object.values(parameterColors).every(pc => pc !== c));
+            if (!color) {
+                color = ENTITY_COLORS_PALETTE[i % ENTITY_COLORS_PALETTE.length];
+            }
             parameterColors[type] = color;
-        }));
+        });
+    });
     return parameterColors;
 }

@@ -1,3 +1,13 @@
+const ENTITY_COLORS_PALETTE = [
+    '#9fecfe',
+    '#afffc8',
+    '#d2c3ea',
+    '#ffd1af',
+    '#ffcdf6',
+    '#dadfe3',
+    '#d7ccc8',
+    '#fffda6',
+];
 
 function showAlternativeMatches (targetElem) {
     if (targetElem.className === 'CodeMirror-code') {
@@ -42,6 +52,7 @@ function createAlternativeMatchesHtml(matches, input) {
     container.id = 'sfw-alt-matches-container-id';
     container.className = 'sfw-alt-matches-container';
 
+    const parameterColors = assignColorsToParameters(matches);
     const matchesHtml = matches.map(({ DisplayName, Score, Parameters }) => {
         let color = 'high';
         if (Score < 0.5) {
@@ -52,7 +63,7 @@ function createAlternativeMatchesHtml(matches, input) {
         return `<div class="sfw-alt-match">
             <span class="sfw-alt-match-name">${DisplayName}</span>
             <span class="sfw-alt-match-score ${color}">${Score}</span>
-            ${createParametersHtml(Parameters, input)}
+            ${createParametersHtml(Parameters, input, parameterColors)}
         </div>`
     }).join('');
 
@@ -64,12 +75,31 @@ function createAlternativeMatchesHtml(matches, input) {
     return container;
 }
 
-function createParametersHtml(parameters, input) {
+function createParametersHtml(parameters, input, parameterColors) {
     if (!parameters) {
         return '';
     }
 
-    return Object.values(parameters).map(({ type, original }) => {
-        return input.replace(original, `<span class="sfw-alt-match-param" title="${type}">${original}</span>`);
-    }).join('');
+    let utteranceWithSpans = input;
+    Object.values(parameters).forEach(({type, original}, i) => {
+        const color = parameterColors[type];
+        utteranceWithSpans = utteranceWithSpans.replace(original,
+             `<span class="sfw-alt-match-param" style="background-color: ${color}" title="${type}">${original}</span>`
+        );
+    });
+
+    return `<div class="sfw-intent-utterance">${utteranceWithSpans}</div>`;
+}
+
+function assignColorsToParameters(matches) {
+    const parameterColors = {};
+    matches.forEach(({ Parameters }) =>
+        Object.values(Parameters).forEach(({ type }, i) => {
+            if (parameterColors[type]) return;
+
+
+            const color = ENTITY_COLORS_PALETTE[i % ENTITY_COLORS_PALETTE.length];
+            parameterColors[type] = color;
+        }));
+    return parameterColors;
 }

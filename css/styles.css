@@ -26,15 +26,17 @@
 
 .sfw-alt-match-name {
     margin-right: 0.5em;
-    width: 50%;
+    width: calc(50% - 65px);
     text-align: right;
     font-weight: bolder;
 }
 
 .sfw-alt-match-score {
-    margin-left: 0.5em;
-    width: 50%;
-    text-align: left;
+    text-align: center;
+    width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .sfw-alt-match-score.low {
@@ -49,4 +51,7 @@
     color: #69a425;
 }
 
+.sfw-intent-utterance {
+    width: calc(50% - 65px);
+}
 

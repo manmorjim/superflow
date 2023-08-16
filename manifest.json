@@ -3,8 +3,9 @@
   "description": "Dialogflow CX boost",
   "version": "1.0",
   "manifest_version": 3,
-  "permissions": ["activeTab", "webRequest"],
+  "permissions": ["activeTab"],
   "action": {
+    "default_icon": "logo.png",
     "default_popup": "index.html"
   },
   "icons": {
